@@ -13,10 +13,10 @@
             <%= wishlist_item.name %>
 
             <% if wishlist_item.amazon_url %>
-              <small>
-                <%= link_to icon('external-link', 'Amazon'),
-                  wishlist_item.amazon_url, target: '_blank' %>
-              </small>
+                <small>
+                  <%= link_to icon('external-link', 'Amazon'),
+                              wishlist_item.amazon_url, target: '_blank' %>
+                </small>
             <% end %>
           </h4>
         </div>
@@ -24,49 +24,55 @@
         <div class="row">
           <!-- Staff Message -->
           <% if wishlist_item.staff_message %>
-            <p>
-            <strong>Staff Message:</strong>
-            <span class="card-text"><%= wishlist_item.staff_message %></span>
-            </p>
+              <p>
+                <strong>Staff Message:</strong>
+                <span class="card-text"><%= wishlist_item.staff_message %></span>
+              </p>
           <% end %>
 
           <!-- Item Details -->
-          <p>
-            <strong>
-              <span class="padding-right">
-                Needed: <%= wishlist_item.quantity %>
-              </span>
-              <span class="padding-right">
-                Priority: <%= wishlist_item.priority %>
-              </span>
+            <p class="padding-right">
+              <strong>Item for:</strong>
+              <span class="card-text"><%= wishlist_item.wishlist.name %></span>
+            </p>
 
-              Price:
-              <% if wishlist_item.price_cents %>
-                <%= number_to_currency(wishlist_item.price_cents / 100.00) %>
-              <% else %>
-                "Unknown"
-              <% end %>
-            </strong>
-          </p>
+            <p>
+              <strong>
+                <span class="padding-right">
+                  Needed: <%= wishlist_item.quantity %>
+                </span>
+                <span class="padding-right">
+                  Priority: <%= wishlist_item.priority %>
+                </span>
+                <span>
+                  Price:
+                  <% if wishlist_item.price_cents %>
+                    <%= number_to_currency(wishlist_item.price_cents / 100.00) %>
+                  <% else %>
+                    "Unknown"
+                  <% end %>
+                </span>
+              </strong>
+            </p>
 
           <% if pledge = current_user.pledge_for(wishlist_item) %>
-            <p class="text-muted">
-              You've pledged <%= pluralize(pledge.quantity, pledge.item_name) %>
-              to <%= pledge.wishlist_name %>
-              <%= link_to '(view pledge)', pledge %>
-            </p>
+              <p class="text-muted">
+                You've pledged <%= pluralize(pledge.quantity, pledge.item_name) %>
+                to <%= pledge.wishlist_name %>
+                <%= link_to '(view pledge)', pledge %>
+              </p>
           <% end %>
 
           <!-- Wishlist Item Actions -->
           <% if current_user.can_manage?(wishlist_item.wishlist) %>
-            <p class="wishlist-item-tools">
-              <strong>Manage wishlist item:</strong>
-              <%= link_to 'Edit', edit_wishlist_item_path(wishlist_item) %> |
-              <%= link_to 'Remove', wishlist_item_path(wishlist_item),
-                          method: :delete,
-                          class: 'text-danger',
-                          data: { confirm: "Are you sure you want to delete this item from your list: \n #{wishlist_item.name}?" } %>
-            </p>
+              <p class="wishlist-item-tools">
+                <strong>Manage wishlist item:</strong>
+                <%= link_to 'Edit', edit_wishlist_item_path(wishlist_item) %> |
+                <%= link_to 'Remove', wishlist_item_path(wishlist_item),
+                            method: :delete,
+                            class:  'text-danger',
+                            data:   {confirm: "Are you sure you want to delete this item from your list: \n #{wishlist_item.name}?"} %>
+              </p>
           <% end %>
         </div>
       </div>
@@ -76,9 +82,9 @@
 
           <!-- Pledge Actions -->
           <%= form_for Pledge.new, method: :post do |f| %>
-            <%= f.hidden_field :wishlist_item_id, value: wishlist_item.id %>
-            <%= f.hidden_field :user_id, value: current_user.id %>
-            <%= f.submit "Pledge to Donate", class:"btn btn-primary", 'data-amazon-url': wishlist_item.amazon_url %>
+              <%= f.hidden_field :wishlist_item_id, value: wishlist_item.id %>
+              <%= f.hidden_field :user_id, value: current_user.id %>
+              <%= f.submit "Pledge to Donate", class: "btn btn-primary", 'data-amazon-url': wishlist_item.amazon_url %>
           <% end %>
           <small id="pledge-help" class="form-text text-muted">
             (will open new <%= icon 'amazon' %> tab)
